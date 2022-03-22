@@ -9,4 +9,17 @@
 // * Destructure the return value into two variables
 // * Use an if..else if..else block to determine what to print
 
-fn main() {}
+fn coord() -> (i32, i32) {
+    (6, 6)
+}
+
+fn main() {
+    let (x, y) = coord();
+    if y < 5 {
+        println!("y > 5")
+    } else if y == 5 {
+        println!("y == 5")
+    } else {
+        println!("y > 5")
+    }
+}
