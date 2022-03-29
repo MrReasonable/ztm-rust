@@ -32,3 +32,23 @@ fn concat(first: &str, second: &str) -> String {
 }
 
 fn main() {}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn check_clamp_in_bounds() {
+        assert_eq!(clamp(5, 4, 6), 5)
+    }
+
+    #[test]
+    fn check_clamp_below_bounds() {
+        assert_eq!(clamp(4, 5, 6), 5);
+    }
+
+    #[test]
+    fn check_clamp_above_bounds() {
+        assert_eq!(clamp(6, 4, 5), 5);
+    }
+}
