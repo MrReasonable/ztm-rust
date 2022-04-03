@@ -21,8 +21,86 @@
 // * Test your program by changing the vehicle status from both a storefront
 //   and from corporate
 
-struct Corporate;
+use std::{cell::RefCell, rc::Rc};
 
-struct StoreFront;
+#[derive(Debug, PartialEq)]
+enum Status {
+    Available,
+    Unavailable,
+    Maintenance,
+    Rented,
+}
+
+#[derive(Debug)]
+enum Vehicle {
+    Car,
+    Truck,
+    Scooter,
+    Motorbike,
+}
+
+#[derive(Debug)]
+struct Rental {
+    vehicle: Vehicle,
+    status: Status,
+    vin: String,
+}
+
+#[derive(Debug)]
+struct Corporate(Rc<RefCell<Vec<Rental>>>);
+
+#[derive(Debug)]
+struct StoreFront(Rc<RefCell<Vec<Rental>>>);
 
 fn main() {}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn update_status() {
+        let vehicles = vec![
+            Rental {
+                vehicle: Vehicle::Car,
+                vin: "A123".to_owned(),
+                status: Status::Available,
+            },
+            Rental {
+                vehicle: Vehicle::Truck,
+                vin: "A124".to_owned(),
+                status: Status::Available,
+            },
+            Rental {
+                vehicle: Vehicle::Motorbike,
+                vin: "A125".to_owned(),
+                status: Status::Maintenance,
+            },
+        ];
+        let vehicles = Rc::new(RefCell::new(vehicles));
+
+        let corporate = Corporate(Rc::clone(&vehicles));
+        let storefront = StoreFront(Rc::clone(&vehicles));
+
+        {
+            let mut rentals = storefront.0.borrow_mut();
+            if let Some(car) = rentals.get_mut(0) {
+                assert_eq!(car.status, Status::Available);
+                car.status = Status::Rented;
+            }
+        }
+
+        {
+            let mut rentals = corporate.0.borrow_mut();
+            if let Some(car) = rentals.get_mut(0) {
+                assert_eq!(car.status, Status::Rented);
+                car.status = Status::Available;
+            }
+        }
+
+        let rentals = storefront.0.borrow();
+        if let Some(car) = rentals.get(0) {
+            assert_eq!(car.status, Status::Available);
+        }
+    }
+}
