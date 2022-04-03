@@ -18,4 +18,37 @@
 // * Use the .next() method to advance the iterator to confirm it works correctly
 // * Only the Iterator trait needs to be implemented for this activity
 
-fn main() {}
+struct ScoreMultiplier {
+    val: usize,
+    per_iteration: usize,
+}
+
+impl Default for ScoreMultiplier {
+    fn default() -> Self {
+        ScoreMultiplier {
+            val: 0,
+            per_iteration: 1,
+        }
+    }
+}
+
+impl Iterator for ScoreMultiplier {
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.val += self.per_iteration;
+        Some(self.val)
+    }
+}
+
+fn main() {
+    let mut multipler = ScoreMultiplier::default();
+
+    println!("{:?}", multipler.next());
+    println!("{:?}", multipler.next());
+    println!("{:?}", multipler.next());
+    println!("{:?}", multipler.next());
+    multipler.per_iteration = 2;
+    println!("{:?}", multipler.next());
+    println!("{:?}", multipler.next());
+}
