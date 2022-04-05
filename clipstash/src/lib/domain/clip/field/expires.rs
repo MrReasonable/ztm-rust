@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::domain::{clip::ClipError, time::Time};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Expires(Option<Time>);
 
 impl Expires {
@@ -14,12 +14,6 @@ impl Expires {
 
     pub fn into_inner(self) -> Option<Time> {
         self.0
-    }
-}
-
-impl Default for Expires {
-    fn default() -> Self {
-        Self(None)
     }
 }
 

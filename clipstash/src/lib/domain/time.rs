@@ -26,7 +26,7 @@ impl FromStr for Time {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match format!("{}T00:00:00Z", s).parse::<DateTime<Utc>>() {
-            Ok(time) => Ok(Self(time.into())),
+            Ok(time) => Ok(Self(time)),
             Err(e) => Err(e),
         }
     }

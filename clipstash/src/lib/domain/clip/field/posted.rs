@@ -1,5 +1,5 @@
 use derive_more::Constructor;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::domain::time::Time;
 
@@ -10,6 +10,4 @@ impl Posted {
     pub fn into_inner(self) -> Time {
         self.0
     }
-
-    
 }

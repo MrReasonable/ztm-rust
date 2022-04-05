@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::domain::clip::ClipError;
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
 pub struct Password(Option<String>);
 
 impl Password {
@@ -28,12 +28,6 @@ impl Password {
 
     pub fn has_password(&self) -> bool {
         self.0.is_some()
-    }
-}
-
-impl Default for Password {
-    fn default() -> Self {
-        Self(None)
     }
 }
 
