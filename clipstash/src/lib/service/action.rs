@@ -5,7 +5,7 @@ use crate::{
     Clip, ServiceError,
 };
 
-use super::ask::{UpdateClip, NewClip, GetClip};
+use super::ask::{GetClip, NewClip, UpdateClip};
 
 pub async fn new_clip(req: NewClip, pool: &DatabasePool) -> Result<Clip, ServiceError> {
     Ok(query::new_clip(req, pool).await?.try_into()?)

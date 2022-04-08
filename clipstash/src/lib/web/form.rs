@@ -15,5 +15,3 @@ pub struct NewClip {
 pub struct GetPasswordProtectedClip {
     pub password: field::Password,
 }
-
-

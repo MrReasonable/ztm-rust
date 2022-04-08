@@ -44,7 +44,7 @@ impl<'a> Renderer<'a> {
     pub fn render_with_data<P, D>(&self, context: P, data: (&str, D), errors: &[&str]) -> String
     where
         P: PageContext + serde::Serialize + Debug,
-        D: serde::Serialize + Debug
+        D: serde::Serialize + Debug,
     {
         let mut value = Self::convert_to_value(&context);
         if let Some(value) = value.as_object_mut() {

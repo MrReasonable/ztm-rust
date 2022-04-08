@@ -1,6 +1,9 @@
 pub mod ctx;
-pub mod renderer;
 pub mod form;
+pub mod http;
+pub mod renderer;
+
+pub const PASSWORD_COOKIE: &str = "password";
 
 #[derive(rocket::Responder)]
 pub enum PageError {
@@ -25,4 +28,3 @@ impl From<serde_json::Error> for PageError {
         PageError::Serlialization(format!("{}", err))
     }
 }
-
