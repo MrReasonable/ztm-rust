@@ -6,7 +6,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::domain::clip::ClipError;
 
-#[derive(Debug, Clone, Serialize, Deserialize, From, UriDisplayQuery, UriDisplayPath)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, From, UriDisplayQuery, UriDisplayPath, Hash, PartialEq, Eq,
+)]
 pub struct ShortCode(String);
 
 impl ShortCode {

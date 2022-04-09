@@ -1,6 +1,9 @@
 use std::path::PathBuf;
 
-use clipstash::{data::AppDatabase, web::renderer::Renderer};
+use clipstash::{
+    data::AppDatabase,
+    web::{hitcounter::HitCounter, renderer::Renderer},
+};
 use dotenv::dotenv;
 use structopt::StructOpt;
 
@@ -19,15 +22,20 @@ fn main() {
 
     let rt = tokio::runtime::Runtime::new().expect("failed to spawn tokio runtime");
     let handle = rt.handle().clone();
+    let renderer = Renderer::new(opt.template_directory.clone());
+    let database = rt.block_on(async move { AppDatabase::new(&opt.connection_string).await });
+    let hit_counter = HitCounter::new(database.get_pool().clone(), handle);
+
+    let config = clipstash::RocketConfig {
+        renderer,
+        database,
+        hit_counter,
+    };
 
     rt.block_on(async move {
-        let renderer = Renderer::new(opt.template_directory);
-        let database = AppDatabase::new(&opt.connection_string).await;
-        let config = clipstash::RocketConfig { renderer, database };
-
         clipstash::rocket(config)
             .launch()
             .await
-            .expect("failed to launch rocket server");
+            .expect("failed to launch rocket server")
     });
 }
