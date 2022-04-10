@@ -77,3 +77,23 @@ impl FromStr for DbId {
         Ok(DbId(Uuid::parse_str(id)?))
     }
 }
+
+#[cfg(test)]
+pub mod test {
+    use std::path::Path;
+
+    use sqlx::migrate::Migrator;
+    use tokio::runtime::Handle;
+
+    use super::*;
+
+    pub fn new_db(handle: &Handle) -> AppDatabase {
+        handle.block_on(async move {
+            let db = Database::new(":memory:").await;
+            let migrator = Migrator::new(Path::new("./migrations")).await.unwrap();
+            let pool = db.get_pool();
+            migrator.run(pool).await.unwrap();
+            db
+        })
+    }
+}

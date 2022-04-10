@@ -2,6 +2,7 @@ use std::convert::TryInto;
 
 use crate::{
     data::{query, DatabasePool, Transaction},
+    web::api::ApiKey,
     Clip, ServiceError, ShortCode,
 };
 
@@ -18,7 +19,7 @@ pub async fn end_transaction(transaction: Transaction<'_>) -> Result<(), Service
 pub async fn increase_hit_count(
     shortcode: &ShortCode,
     hits: u32,
-    pool: &DatabasePool
+    pool: &DatabasePool,
 ) -> Result<(), ServiceError> {
     Ok(query::increase_hit_count(shortcode, hits, pool).await?)
 }
@@ -39,4 +40,24 @@ pub async fn get_clip(req: GetClip, pool: &DatabasePool) -> Result<Clip, Service
     } else {
         Ok(clip)
     }
+}
+
+pub async fn generate_api_key(pool: &DatabasePool) -> Result<ApiKey, ServiceError> {
+    let api_key = ApiKey::default();
+    Ok(query::save_api_key(api_key, pool).await?)
+}
+
+pub async fn revoke_api_key(
+    api_key: ApiKey,
+    pool: &DatabasePool,
+) -> Result<query::RevocationStatus, ServiceError> {
+    Ok(query::revoke_api_key(api_key, pool).await?)
+}
+
+pub async fn api_key_is_valid(api_key: ApiKey, pool: &DatabasePool) -> Result<bool, ServiceError> {
+    Ok(query::api_key_is_valid(api_key, pool).await?)
+}
+
+pub async fn delete_expired(pool: &DatabasePool) -> Result<u64, ServiceError> {
+    Ok(query::delete_expired(pool).await?)
 }
