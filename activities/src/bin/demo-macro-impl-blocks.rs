@@ -1,9 +1,23 @@
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 struct Volume(usize);
 
 trait ReagentContainer {
     fn max_volume(&self) -> Volume;
     fn current_volume(&self) -> Volume;
+}
+
+macro_rules! impl_reagent_container {
+    ($container:ty : $volume:literal) => {
+        impl ReagentContainer for $container {
+            fn max_volume(&self) -> Volume {
+                Volume($volume)
+            }
+
+            fn current_volume(&self) -> Volume {
+                self.current_volume
+            }
+        }
+    };
 }
 
 struct TallFlask {
@@ -23,4 +37,24 @@ struct OtherTube {
     max_volume: Volume,
 }
 
-fn main() {}
+impl ReagentContainer for OtherTube {
+    fn max_volume(&self) -> Volume {
+        self.max_volume
+    }
+
+    fn current_volume(&self) -> Volume {
+        self.current_volume
+    }
+}
+
+impl_reagent_container!(TallFlask: 32);
+impl_reagent_container!(TestTube: 8);
+impl_reagent_container!(Pipette: 2);
+
+fn main() {
+    let tube = TestTube {
+        current_volume: Volume(5),
+    };
+
+    dbg!(tube.max_volume());
+}

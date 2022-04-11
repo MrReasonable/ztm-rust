@@ -202,3 +202,24 @@ pub mod catcher {
         catchers![page_not_found, internal_error, default]
     }
 }
+
+#[cfg(test)]
+pub mod test {
+    use rocket::http::Status;
+
+    use crate::web::test::client;
+
+    #[test]
+    fn get_home() {
+        let client = client();
+        let response = client.get("/").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[test]
+    fn error_on_missing_clip() {
+        let client = client();
+        let response = client.get("/clip/asdfasfd").dispatch();
+        assert_eq!(response.status(), Status::NotFound);
+    }
+}

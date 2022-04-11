@@ -17,6 +17,7 @@ pub enum ServiceError {
 
 impl From<DataError> for ServiceError {
     fn from(err: DataError) -> Self {
+        eprintln!("{:#?}", err);
         match err {
             DataError::Database(d) => match d {
                 sqlx::Error::RowNotFound => Self::NotFound,
