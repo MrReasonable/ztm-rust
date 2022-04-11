@@ -26,7 +26,7 @@ fn sample_fn(n: u8) -> Size {
     match n {
         0..=53 => Small,
         54..=154 => Medium,
-        155.. => Large
+        155.. => Large,
     }
 }
 
@@ -35,4 +35,30 @@ fn main() {
 }
 
 #[cfg(test)]
-mod test { }
+mod test {
+    use super::*;
+
+    macro_rules! multi_test {
+        (
+            $fn:ident :
+            $( $name:ident -> $values:expr ),+
+            $(,)?
+        ) => {
+            $(
+                #[test]
+                fn $name () {
+                    assert_eq!($fn($values.0), $values.1);
+                }
+            )+
+        };
+    }
+
+    multi_test!(sample_fn:
+        min_small -> (0, Size::Small),
+        max_small -> (53, Size::Small),
+        min_medium -> (54, Size::Medium),
+        max_medium -> (154, Size::Medium),
+        min_large -> (155, Size::Large),
+        max_large -> (u8::MAX, Size::Large),
+    );
+}
