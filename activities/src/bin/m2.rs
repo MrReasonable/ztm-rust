@@ -31,12 +31,23 @@ struct InvestorId(Id);
 struct ManagerId(Id);
 struct VendorId(Id);
 
-impl Deref for ContractorId {
-    type Target = Id;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+macro_rules! deref {
+    ($type:ty) => {
+        impl Deref for $type {
+            type Target = Id;
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+    };
 }
+
+deref!(ContractorId);
+deref!(EmployeeId);
+deref!(GuestId);
+deref!(InvestorId);
+deref!(ManagerId);
+deref!(VendorId);
 
 /// This function can accept any type which can be dereferenced into an Id.
 fn check_id(id: &Id) {
