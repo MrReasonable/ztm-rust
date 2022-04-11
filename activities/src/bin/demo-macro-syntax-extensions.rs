@@ -1,14 +1,41 @@
-// iterable[start:end-1]
-// iterable[1:3] -> items at index 1 and 2
+macro_rules! iterslice {
+    // iterable[k]
+    // iterable[3] -> retrieve item at index 3
+    ($iterable:ident [ $index:literal ]) => {{
+        let mut iterable = $iterable.iter();
+        iterable.nth($index).expect("index out of bounds")
+    }};
 
-// iterable[k]
-// iterable[3] -> retrieve item at index 3
+    // iterable[start:]
+    // iterable[3:] -> skip 3, until the end
+    ($iterable:ident [ $index:literal : ]) => {{
+        let iterable = $iterable.iter();
+        iterable.skip($index)
+    }};
 
-// iterable[start:]
-// iterable[3:] -> skip 3, until the end
+    // iterable[:end-1]
+    // iterable[:5] -> take everything up to (but not including) index 5
+    ($iterable:ident [ : $index:literal ]) => {{
+        let iterable = $iterable.iter();
+        iterable.take($index)
+    }};
 
-// iterable[:end-1]
-// iterable[:5] -> take everything up to (but not including) index 5
+    // iterable[start:end-1]
+    // iterable[1:3] -> items at index 1 and 2
+    ($iterable:ident [ $start:literal : $end:literal ]) => {{
+        let iterable = $iterable.iter();
+
+        if $start > $end {
+            panic!("start index > end index");
+        }
+
+        if $start == $end {
+            iterable.skip($start).take(1)
+        } else {
+            iterable.skip($start).take($end - $start)
+        }
+    }};
+}
 
 fn main() {}
 

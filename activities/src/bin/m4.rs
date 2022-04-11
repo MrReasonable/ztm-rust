@@ -13,9 +13,24 @@
 // * Run `cargo test --bin m4` to check your work.
 
 macro_rules! get {
+    //first item from iterable
+    (first item from $iterable:expr) => {
+        $iterable.iter().nth(0)
+    };
+
     // first k items from iterable
     (first $count:literal items from $iterable:expr) => {
         $iterable.iter().take($count)
+    };
+
+    //last x items from iterable
+    (last $count:literal items from $iterable:expr) => {
+        $iterable.iter().skip($iterable.len() - $count)
+    };
+
+    //last item from iterable
+    (last item from $iterable:expr) => {
+        $iterable.iter().nth($iterable.len() - 1)
     };
 }
 
@@ -25,6 +40,10 @@ fn main() {
     let last_3: Vec<&i32> = get!(last 3 items from data).collect::<Vec<_>>();
     let first_item: Option<&i32> = get!(first item from data);
     let last_item: Option<&i32> = get!(last item from data);
+    dbg!(first_3);
+    dbg!(last_3);
+    dbg!(first_item);
+    dbg!(last_item);
 }
 
 #[cfg(test)]
