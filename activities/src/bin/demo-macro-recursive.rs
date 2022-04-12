@@ -1,4 +1,14 @@
 macro_rules! html {
+    //base case
+    ($w:expr,) => {};
+    ($w:expr, $e:tt) => (write!($w, "{}", $e));
+    ($w:expr, $tag:ident [ $($inner:tt)* ] $($rest:tt)*) => {{
+        let tag_name = stringify!($tag);
+        write!($w, "<{}>", tag_name);
+        html!($w, $($inner)*);
+        write!($w, "</{}>", tag_name);
+        html!($w, $($rest)*);
+    }};
 }
 
 #[allow(unused_must_use)]
